@@ -1,11 +1,15 @@
+import org.w3c.dom.ls.LSOutput;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     private static final int Max_Seats = 100;
-    private static final ArrayList<Integer> Students = new ArrayList<>(Max_Seats);
+    private static final ArrayList<String> Students = new ArrayList<>(Max_Seats);
     private static final ArrayList<String> StudentName = new ArrayList<>();
     private static int RegCount = 0;
+    private static final String StudentData = "Student_Details.txt";
     public static void main(String[] args) {
 
 
@@ -35,9 +39,11 @@ public class Main {
                     break;
 
                 case 5:
+                    StoreDATA();
                     break;
 
                 case 6:
+                    LoadData();
                     break;
 
                 case 7:
@@ -78,11 +84,11 @@ public class Main {
         Scanner Details = new Scanner(System.in); //for input the student details
 
 
-        System.out.println("Enter the Student ID number to Proceed or press ( 0 ) to exit");
         while (RegCount<Max_Seats) {
+            System.out.println("Enter the Student ID number to Proceed or press ( 0 ) to exit");
             if (Details.hasNextInt()) {
-                int input = Details.nextInt();
-                if (input == 0) { // while loop running until 0 is inputted
+                String  input = Details.next();
+                if (input.equals("0")) { // while loop running until 0 is inputted
                     System.out.println("Exiting..");
                     break;
                 } else if (Students.contains(input)) {
@@ -117,10 +123,10 @@ public class Main {
                     System.out.println("Exiting..");
                     break;
                 } else {
-                    int index = Students.indexOf(remove);
-                    if (index < 100 || index > 0) { //Check if the ID is available or not
-                        Students.remove(index);
-                        StudentName.remove(index);
+                    int DeleteIndex = Students.indexOf(remove);
+                    if (DeleteIndex != -1) { //Check if the ID is available or not
+                        Students.remove(DeleteIndex);
+                        StudentName.remove(DeleteIndex);
                         System.out.println("Deletion complete..");
                         RegCount--; //Decreasing the number of seats
                         break;
@@ -137,10 +143,66 @@ public class Main {
         }
     }
 
-    private static void FindStudent(){
+    //To search with student ID
+    private static void FindStudent () {
 
         Scanner Search = new Scanner(System.in);
 
+        System.out.println("Enter the Id");
+        while (true) {
+            if (Search.hasNextInt()) {
+                int SID = Search.nextInt();
 
+                if (SID == 0) {
+                    System.out.println("Exiting..");
+                    break;
+                } else {
+                    int SearchIndex = Students.indexOf(SID);
+                    if (SearchIndex != -1) {
+                        System.out.println("Student ID : " + SID + ";  Name : " + StudentName.get(SearchIndex));
+                    } else {
+                        System.out.println("Student ID not found");
+                    }
+                }
+            } else {
+                System.out.println("Invalid input!!!");
+                Search.next();
+            }
+        }
+    }
+
+    private static void StoreDATA () {
+
+        try (BufferedWriter FileWrite = new BufferedWriter(new FileWriter(StudentData))) {
+
+            for (int i = 0; i < Students.size(); i++) {
+                String line = Students.get(i) + " : " + StudentName.get(i);
+                FileWrite.write(line);
+                FileWrite.newLine();
+            }
+            System.out.println("Student data Saved Sccessfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void LoadData () {
+        try(BufferedReader FileRead = new BufferedReader(new FileReader(StudentData))) {
+            String lines;
+            while ((lines = FileRead.readLine()) != null) {
+                String[] part = lines.split(" : ");
+                if (part.length == 2) {
+                    String ID = part[0].trim();
+                    String Name = part[1].trim();
+                    Students.add(ID);
+                    StudentName.add((Name));
+                } else {
+                    System.out.println("Invalid Format");
+                }
+            }
+            System.out.println("Data loaded successfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
