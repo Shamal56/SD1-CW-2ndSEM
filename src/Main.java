@@ -1,7 +1,6 @@
-import org.w3c.dom.ls.LSOutput;
-
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -47,19 +46,15 @@ public class Main {
                     break;
 
                 case 7:
+                    viewSortedStudents();
                     break;
 
                 default:
                     System.out.println("Invalid Choice!! Try Again!!");
-
+            }
         }
-
-
-
-
-        }
-
     }
+
     static void Menu() {
         System.out.println("1. Check available seats");
         System.out.println("2. Register student (with ID)");
@@ -72,7 +67,7 @@ public class Main {
     }
     static void checkAvailableSeats() { // Method for adding students
 
-        int Seats = Max_Seats - RegCount;
+        int Seats = Max_Seats - Students.size();
         System.out.println(RegCount);
         System.out.println("Available Seats : " + Seats);
 
@@ -83,18 +78,21 @@ public class Main {
 
         Scanner Details = new Scanner(System.in); //for input the student details
 
-
         while (RegCount<Max_Seats) {
             System.out.println("Enter the Student ID number to Proceed or press ( 0 ) to exit");
+
             if (Details.hasNextInt()) {
                 String  input = Details.next();
+
                 if (input.equals("0")) { // while loop running until 0 is inputted
                     System.out.println("Exiting..");
                     break;
-                } else if (Students.contains(input)) {
+                }
+                else if (Students.contains(input)) {
                     System.out.println("ID Already Exists..");
                     RegCount--;
-                } else {
+                }
+                else {
                     Details.nextLine();
                     System.out.println("Enter the name of the Student.");
                     String name = Details.nextLine();
@@ -102,13 +100,16 @@ public class Main {
                     StudentName.add(name);
                     RegCount++;
                 }
-            } else {
+            }
+            else {
                 System.out.println("Invalid input!! Try again!!");
                 Details.next();
 
             }
         }
     }
+
+
     private static void Delete() { // Method for deleting Students
 
         Scanner delete = new Scanner(System.in);
@@ -116,13 +117,14 @@ public class Main {
         System.out.println("Enter the Student ID that want to delete or press ( 0 ) to back.");
 
         while (true) {
-            if (delete.hasNextInt()) {
-                int remove = delete.nextInt();
+            if (delete.hasNextLine()) {
+                String remove = String.valueOf(delete.nextInt());
 
-                if (remove == 0) {
+                if (remove.equals("0")) {
                     System.out.println("Exiting..");
                     break;
-                } else {
+                }
+                else {
                     int DeleteIndex = Students.indexOf(remove);
                     if (DeleteIndex != -1) { //Check if the ID is available or not
                         Students.remove(DeleteIndex);
@@ -130,13 +132,15 @@ public class Main {
                         System.out.println("Deletion complete..");
                         RegCount--; //Decreasing the number of seats
                         break;
-                    } else {
+                    }
+                    else {
                         System.out.println("Student ID not found..!!");
                         delete.next();
 
                     }
                 }
-            } else {
+            }
+            else {
                 System.out.println("Invalid input!!");
                 delete.next();
             }
@@ -150,10 +154,10 @@ public class Main {
 
         System.out.println("Enter the Id");
         while (true) {
-            if (Search.hasNextInt()) {
-                int SID = Search.nextInt();
+            if (Search.hasNextLine()) {
+                String SID = String.valueOf(Search.nextInt());
 
-                if (SID == 0) {
+                if (SID.equals("0")) {
                     System.out.println("Exiting..");
                     break;
                 } else {
@@ -187,15 +191,19 @@ public class Main {
     }
 
     private static void LoadData () {
+
         try(BufferedReader FileRead = new BufferedReader(new FileReader(StudentData))) {
             String lines;
+
             while ((lines = FileRead.readLine()) != null) {
                 String[] part = lines.split(" : ");
+
                 if (part.length == 2) {
                     String ID = part[0].trim();
                     String Name = part[1].trim();
                     Students.add(ID);
                     StudentName.add((Name));
+
                 } else {
                     System.out.println("Invalid Format");
                 }
@@ -205,4 +213,37 @@ public class Main {
             throw new RuntimeException(e);
         }
     }
+
+    private static void viewSortedStudents() {
+        bubbleSort(); // Sort StudentName list
+
+        System.out.println("Sorted list of students:");
+        for (String sortedName : StudentName) {
+            String id = getStudentIdByName(sortedName); // Get ID corresponding to sorted name
+            System.out.println("ID: " + id + ", Name: " + sortedName);
+        }
+    }
+    //For get IDs of Names
+    private static String getStudentIdByName(String name) {
+        //for loop for iterate and search in Students Arraylist for the index of Name
+        for (int i = 0; i < StudentName.size(); i++) {
+            if (StudentName.get(i).equals(name)) {
+                return Students.get(i);
+            }
+        }
+        //If not available
+        return null;
+    }
+
+    private static void bubbleSort() {
+        int n = Main.StudentName.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (Main.StudentName.get(j).compareTo(Main.StudentName.get(j + 1)) > 0) {
+                    Collections.swap(Main.StudentName, j, j + 1);
+                }
+            }
+        }
+    }
+
 }
