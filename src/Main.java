@@ -5,13 +5,12 @@ import java.util.Scanner;
 
 public class Main {
     private static final int Max_Seats = 100;
-    private static final ArrayList<String> Students = new ArrayList<>(Max_Seats);
-    private static final ArrayList<String> StudentName = new ArrayList<>();
+    static final ArrayList<String> Students = new ArrayList<>(Max_Seats);
+    static final ArrayList<String> StudentName = new ArrayList<>();
     private static int RegCount = 0;
     private static final String StudentData = "Student_Details.txt";
+    private static final String StudentsReport = "Student_Report.txt";
     public static void main(String[] args) {
-
-
 
 
         Scanner input = new Scanner(System.in);
@@ -49,6 +48,10 @@ public class Main {
                     viewSortedStudents();
                     break;
 
+                case 8:
+                    displayMenu2();
+                    break;
+
                 default:
                     System.out.println("Invalid Choice!! Try Again!!");
             }
@@ -63,7 +66,7 @@ public class Main {
         System.out.println("5. Store student details into a file");
         System.out.println("6. Load student details from the file to the system");
         System.out.println("7. View the list of students based on their names");
-
+        System.out.println("8. Student Data");
     }
     static void checkAvailableSeats() { // Method for adding students
 
@@ -184,7 +187,7 @@ public class Main {
                 FileWrite.write(line);
                 FileWrite.newLine();
             }
-            System.out.println("Student data Saved Sccessfully.");
+            System.out.println("Student data Saved Successfully.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -243,6 +246,94 @@ public class Main {
                     Collections.swap(Main.StudentName, j, j + 1);
                 }
             }
+        }
+    }
+    static void Menu2() {
+        System.out.println("a. Add Name");
+        System.out.println("b. Module Marks");
+        System.out.println("c. Summary");
+        System.out.println("d. Student Detail Report");
+        System.out.println("0. go mack to main menu");
+    }
+    static void displayMenu2() {
+        Scanner input = new Scanner(System.in);
+        boolean exitMenu = false;
+        while (!exitMenu) {
+            Menu2();
+            System.out.println("Enter your choice :");
+            String Choice = input.next();
+            input.nextLine();
+
+            switch (Choice) {
+                case "a":
+                    AddName();
+                    break;
+                case "b":
+                    Student_Mark();
+                    break;
+
+                case "c":
+
+                    break;
+
+                case "d":
+
+                    break;
+
+                case "0":
+                    exitMenu = true;
+                    System.out.println("Exiting to the main menu..");
+                    System.out.println();
+                    System.out.println();
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice!! Try Again!!");
+            }
+        }
+    }
+
+    static void AddName() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter the Student Name : ");
+        String name = input.nextLine();
+
+        int index = StudentName.indexOf(name);
+        if (index != -1) {
+            System.out.println("Student with name '" + name + "' already exists.");
+        } else {
+            // Assuming student ID is managed or generated elsewhere
+            System.out.println("Enter the Student ID:");
+            String id = input.nextLine();
+
+            // Create a new student object
+            Student student = new Student(id, name);
+
+            // Add student to lists
+            Students.add(id);
+            StudentName.add(name);
+
+            System.out.println("Student '" + name + "' registered with ID '" + id + "'.");
+            RegCount++;
+        }
+    }
+    private static void Student_Mark() {
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter the Student name : ");
+        String name = input.nextLine();
+
+        int index = StudentName.indexOf(name);
+        if (index != -1) {
+            Student student = new Student(Students.get(index), name);
+            student.inputModuleMarks();
+
+            System.out.println("Marks and Grades:");
+            for (Module module : student.getModules()) {
+                System.out.println("Mark: " + module.getMark() + ", Grade: " + module.getGrade());
+            }
+        } else {
+            System.out.println("Student not found");
         }
     }
 
