@@ -10,46 +10,68 @@ public class Main {
     private static int RegCount = 0;
     private static final String StudentData = "Student_Details.txt";
     private static final String StudentsReport = "Student_Report.txt";
+    private static final String StudentSummary = "Student_Summary.txt";
+    static final ArrayList<Integer> Module_1 = new ArrayList<>();
+    static final ArrayList<Integer> Module_2 = new ArrayList<>();
+    static final ArrayList<Integer> Module_3 = new ArrayList<>();
+    static final ArrayList<Double> Average = new ArrayList<>();
+    static final ArrayList<String> Module1 = new ArrayList<>();
+    static final ArrayList<String> Module2 = new ArrayList<>();
+    static final ArrayList<String> Module3 = new ArrayList<>();
+
+
+
     public static void main(String[] args) {
 
-
+        System.out.println();
         Scanner input = new Scanner(System.in);
         while (true) {
             Menu();
-            System.out.println("Enter your choice :");
+            System.out.print("Enter your choice : ");
             int Choice = input.nextInt();
             input.nextLine();
 
             switch (Choice) {
                 case 1:
+                    System.out.println();
                     checkAvailableSeats();
+                    System.out.println();
                     break;
+
                 case 2:
                     Register();
+                    System.out.println();
                     break;
 
                 case 3:
                     Delete();
+                    System.out.println();
                     break;
 
                 case 4:
                     FindStudent();
+                    System.out.println();
                     break;
 
                 case 5:
                     StoreDATA();
+                    System.out.println();
                     break;
 
                 case 6:
                     LoadData();
+                    System.out.println();
                     break;
 
                 case 7:
-                    viewSortedStudents();
+                    ViewStudents();
+                    System.out.println();
                     break;
 
                 case 8:
+
                     displayMenu2();
+                    System.out.println();
                     break;
 
                 default:
@@ -57,6 +79,7 @@ public class Main {
             }
         }
     }
+
 
     static void Menu() {
         System.out.println("1. Check available seats");
@@ -67,12 +90,16 @@ public class Main {
         System.out.println("6. Load student details from the file to the system");
         System.out.println("7. View the list of students based on their names");
         System.out.println("8. Student Data");
+        System.out.println();
     }
+
+
     static void checkAvailableSeats() { // Method for adding students
 
         int Seats = Max_Seats - Students.size();
-        System.out.println(RegCount);
+        System.out.println("Taken : " + RegCount);
         System.out.println("Available Seats : " + Seats);
+        System.out.println();
 
     }
 
@@ -82,7 +109,8 @@ public class Main {
         Scanner Details = new Scanner(System.in); //for input the student details
 
         while (RegCount<Max_Seats) {
-            System.out.println("Enter the Student ID number to Proceed or press ( 0 ) to exit");
+            System.out.print("Enter the Student ID number to Proceed or press ( 0 ) to exit : ");
+            System.out.println();
 
             if (Details.hasNextInt()) {
                 String  input = Details.next();
@@ -97,7 +125,7 @@ public class Main {
                 }
                 else {
                     Details.nextLine();
-                    System.out.println("Enter the name of the Student.");
+                    System.out.print("Enter the name of the Student : ");
                     String name = Details.nextLine();
                     Students.add(input);
                     StudentName.add(name);
@@ -107,9 +135,9 @@ public class Main {
             else {
                 System.out.println("Invalid input!! Try again!!");
                 Details.next();
-
             }
         }
+        System.out.println();
     }
 
 
@@ -117,9 +145,11 @@ public class Main {
 
         Scanner delete = new Scanner(System.in);
 
-        System.out.println("Enter the Student ID that want to delete or press ( 0 ) to back.");
+        System.out.print("Enter the Student ID that want to delete or press ( 0 ) to back : ");
+        System.out.println();
 
         while (true) {
+            ViewStudents();
             if (delete.hasNextLine()) {
                 String remove = String.valueOf(delete.nextInt());
 
@@ -132,14 +162,24 @@ public class Main {
                     if (DeleteIndex != -1) { //Check if the ID is available or not
                         Students.remove(DeleteIndex);
                         StudentName.remove(DeleteIndex);
+                        Module_1.remove(DeleteIndex);
+                        Module_2.remove(DeleteIndex);
+                        Module_3.remove(DeleteIndex);
+                        Module1.remove(DeleteIndex);
+                        Module2.remove(DeleteIndex);
+                        Module3.remove(DeleteIndex);
+                        Average.remove(DeleteIndex);
+
                         System.out.println("Deletion complete..");
                         RegCount--; //Decreasing the number of seats
+                        StoreDATA();
+                        StoreSummary();
+                        StoreFullReport();
                         break;
                     }
                     else {
                         System.out.println("Student ID not found..!!");
                         delete.next();
-
                     }
                 }
             }
@@ -148,6 +188,7 @@ public class Main {
                 delete.next();
             }
         }
+        System.out.println();
     }
 
     //To search with student ID
@@ -155,7 +196,8 @@ public class Main {
 
         Scanner Search = new Scanner(System.in);
 
-        System.out.println("Enter the Id");
+        System.out.print("Enter the Id : ");
+        System.out.println();
         while (true) {
             if (Search.hasNextLine()) {
                 String SID = String.valueOf(Search.nextInt());
@@ -191,6 +233,36 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        StoreSummary();
+        StoreFullReport();
+    }
+
+    private static void StoreSummary() {
+        try (BufferedWriter FileWrite = new BufferedWriter(new FileWriter(StudentSummary))) {
+
+            for (int i = 0; i < Students.size(); i++) {
+                String line = Students.get(i) + " ; " + StudentName.get(i) + " ; " + Module_1.get(i) + " ; " + Module_2.get(i) + " ; " + Module_3.get(i) + " ; " + Average.get(i);
+                FileWrite.write(line);
+                FileWrite.newLine();
+            }
+            System.out.println("Student data Saved Successfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void StoreFullReport() {
+        try (BufferedWriter FileWrite = new BufferedWriter(new FileWriter(StudentsReport))) {
+
+            for (int i = 0; i < Students.size(); i++) {
+                String line = Students.get(i) + " ; " + StudentName.get(i) + " ; "  + Module_1.get(i) + " ; " + Module1.get(i) + " ; " + Module_2.get(i) + " ; " + Module2.get(i) + " ; " + Module_3.get(i) + " ; " + Module1.get(i) + " ; " + Average.get(i);
+                FileWrite.write(line);
+                FileWrite.newLine();
+            }
+            System.out.println("Student data Saved Successfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void LoadData () {
@@ -215,17 +287,86 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        LoadSummaryData();
+        LoadReportData();
+
     }
 
-    private static void viewSortedStudents() {
-        bubbleSort(); // Sort StudentName list
+    private static void LoadSummaryData () {
 
-        System.out.println("Sorted list of students:");
-        for (String sortedName : StudentName) {
-            String id = getStudentIdByName(sortedName); // Get ID corresponding to sorted name
-            System.out.println("ID: " + id + ", Name: " + sortedName);
+        try(BufferedReader FileRead = new BufferedReader(new FileReader(StudentSummary))) {
+            String lines;
+
+            while ((lines = FileRead.readLine()) != null) {
+                String[] part = lines.split(" ; ");
+
+                if (part.length == 6) {
+                    int module_1 = Integer.parseInt(part[2].trim());
+                    int module_2 = Integer.parseInt(part[3].trim());
+                    int module_3 = Integer.parseInt(part[4].trim());
+                    double avg = Double.parseDouble(part[5].trim());
+                    Module_1.add(module_1);
+                    Module_2.add(module_2);
+                    Module_3.add(module_3);
+                    Average.add(avg);
+
+                } else {
+                    System.out.println("Invalid Format");
+                }
+            }
+            System.out.println("Data loaded successfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+    private static void LoadReportData () {
+
+        try(BufferedReader FileRead = new BufferedReader(new FileReader(StudentsReport))) {
+            String lines;
+
+            while ((lines = FileRead.readLine()) != null) {
+                String[] part = lines.split(" ; ");
+
+                if (part.length == 9) {
+                    String grade_1 = part[3];
+                    String grade_2 = part[5];
+                    String grade_3 = part[7];
+                    Module1.add(grade_1);
+                    Module2.add(grade_2);
+                    Module3.add(grade_3);
+
+                } else {
+                    System.out.println("Invalid Format");
+                }
+            }
+            System.out.println("Data loaded successfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void ViewStudents() {
+        bubbleSort(); // Sort by Average marks
+
+        System.out.println("Sorted list of students by Average marks:");
+        for (String sortedName : StudentName) {
+            String id = getStudentIdByName(sortedName); // Get ID corresponding to sorted name
+            double average = getAverageByStudentName(sortedName); // Get average marks corresponding to sorted name
+            System.out.println("ID: " + id + ", Name: " + sortedName + ", Average Marks: " + average);
+        }
+    }
+
+    // Retrieve average marks by student name
+    private static double getAverageByStudentName(String name) {
+        int index = StudentName.indexOf(name);
+        if (index != -1) {
+            return Average.get(index);
+        }
+        return 0.0; // Return 0 if name not found (though it shouldn't happen if sorting is correct)
+    }
+
+
     //For get IDs of Names
     private static String getStudentIdByName(String name) {
         //for loop for iterate and search in Students Arraylist for the index of Name
@@ -248,6 +389,7 @@ public class Main {
             }
         }
     }
+
     static void Menu2() {
         System.out.println("a. Add Name");
         System.out.println("b. Module Marks");
@@ -255,21 +397,24 @@ public class Main {
         System.out.println("d. Student Detail Report");
         System.out.println("0. go mack to main menu");
     }
+
     static void displayMenu2() {
         Scanner input = new Scanner(System.in);
         boolean exitMenu = false;
         while (!exitMenu) {
             Menu2();
-            System.out.println("Enter your choice :");
+            System.out.print("Enter your choice : ");
             String Choice = input.next();
             input.nextLine();
 
             switch (Choice) {
                 case "a":
                     AddName();
+                    System.out.println();
                     break;
                 case "b":
                     Student_Mark();
+                    System.out.println();
                     break;
 
                 case "c":
@@ -295,15 +440,18 @@ public class Main {
 
     static void AddName() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter the Student Name : ");
+        System.out.print("Enter the Student Name : ");
+        System.out.println();
         String name = input.nextLine();
 
         int index = StudentName.indexOf(name);
         if (index != -1) {
             System.out.println("Student with name '" + name + "' already exists.");
+            System.out.println();
         } else {
             // Assuming student ID is managed or generated elsewhere
-            System.out.println("Enter the Student ID:");
+            System.out.print("Enter the Student ID : ");
+            System.out.println();
             String id = input.nextLine();
 
             // Create a new student object
@@ -314,27 +462,42 @@ public class Main {
             StudentName.add(name);
 
             System.out.println("Student '" + name + "' registered with ID '" + id + "'.");
+            System.out.println();
             RegCount++;
         }
     }
+
     private static void Student_Mark() {
-
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter the Student name : ");
-        String name = input.nextLine();
+        System.out.print("Enter the Student Name or ID : ");
+        System.out.println();
+        String identifier = input.nextLine();
 
-        int index = StudentName.indexOf(name);
-        if (index != -1) {
-            Student student = new Student(Students.get(index), name);
-            student.inputModuleMarks();
+        int index = -1;
+        Student student = Student.findStudentByName(identifier);
 
-            System.out.println("Marks and Grades:");
-            for (Module module : student.getModules()) {
-                System.out.println("Mark: " + module.getMark() + ", Grade: " + module.getGrade());
+        if (student == null) {
+            index = Students.indexOf(identifier);
+            if (index != -1) {
+                student = new Student(identifier, StudentName.get(index));
             }
         } else {
-            System.out.println("Student not found");
+            index = StudentName.indexOf(student.getName());
         }
-    }
 
+        if (student == null) {
+            System.out.println("Student not found.");
+            System.out.println();
+            return;
+        }
+
+        student.inputModuleMarks(index);
+        System.out.println("Marks added successfully.");
+        System.out.println();
+    }
+    private static void Summary() {
+
+
+
+    }
 }
