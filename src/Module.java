@@ -1,14 +1,14 @@
 public class Module {
 
-    private final int mark;
+    private static int mark = 0;
     private final String grade;
 
     public Module(int mark) {
         this.mark = mark;
-        this.grade = calculateGrade(mark);
+        this.grade = GradeSystem();
     }
 
-    private String calculateGrade(int mark) {
+    static String GradeSystem() {
         if (mark >= 80) {
             return "Distinction";
         } else if (mark >= 70) {
@@ -27,5 +27,5 @@ public class Module {
     public String getGrade() {
         return grade;
     }
-
+    
 }
