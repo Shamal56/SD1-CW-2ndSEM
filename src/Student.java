@@ -36,7 +36,7 @@ public class Student {
     public void inputModuleMarks(int index) {
         Scanner input = new Scanner(System.in);
         int totalMarks = 0;
-
+        System.out.println();
         for (int i = 1; i <= 3; i++) {
             System.out.print("Enter mark for module " + i + ": ");
             int mark = input.nextInt();
@@ -45,34 +45,44 @@ public class Student {
 
             // Update the respective module lists
             if (i == 1) {
-                Main.Module_1.add(mark);
-                Main.Module1.add(module.getGrade());
+                Main.Module_1[index] = mark;
             } else if (i == 2) {
-                Main.Module_2.add(mark);
-                Main.Module2.add(module.getGrade());
-            } else if (i == 3) {
-                Main.Module_3.add(mark);
-                Main.Module3.add(module.getGrade());
+                Main.Module_2[index] = mark;
+            } else {
+                Main.Module_3[index] = mark;
             }
 
             // Calculate total marks
-            totalMarks += mark;
+            totalMarks += module.getMark();
         }
 
+        Main.TotalMarks[index] = totalMarks;
         // Calculate average marks
         double AverageMarks = (double) totalMarks / 3;
 
         // Update the Average list at the given index
-        Main.Average.add(AverageMarks);
+        Main.Average[index] = AverageMarks;
+        String Grade = AVGGrade(AverageMarks);
+        Main.AverageGrade[index] = Grade;
+        System.out.println();
+        System.out.println("Grade : " + Grade);
+        System.out.println();
     }
 
-    public static Student findStudentByName(String name) {
-        int index = Main.StudentName.indexOf(name);
-        if (index != -1) {
-            String id = Main.Students.get(index);
-            return new Student(id, name);
+    private String AVGGrade(double AverageMarks) {
+        String Grade;
+        if (AverageMarks >= 80) {
+            Grade = "Distinction";
+        } else if (AverageMarks >= 70) {
+            Grade = "Merit";
+        } else if (AverageMarks >= 40) {
+            Grade = "Pass";
         } else {
-            return null;
+            Grade = "Fail";
         }
+        return Grade;
+
+
     }
+
 }
