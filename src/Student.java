@@ -1,38 +1,25 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Student {
     private final String id;
     private final String name;
-    private final List<Module> modules;
 
     public Student(String id, String name) {
         this.id = id;
         this.name = name;
-        this.modules = new ArrayList<>();
     }
 
+    //Method to get the id
     public String getId() {
         return id;
     }
 
+    //Method to get the anme
     public String getName() {
         return name;
     }
 
-    public void addModule(Module module) {
-        if (modules.size() < 3) {
-            modules.add(module);
-        } else {
-            System.out.println("Cannot add more than 3 modules");
-        }
-    }
-
-    public List<Module> getModules() {
-        return modules;
-    }
-
+    //Method for input marks to the modules one by one
     public void inputModuleMarks(int index) {
         Scanner input = new Scanner(System.in);
         int totalMarks = 0;
@@ -41,7 +28,7 @@ public class Student {
             System.out.print("Enter mark for module " + i + ": ");
             int mark = input.nextInt();
             Module module = new Module(mark);
-            addModule(module);
+            Module.AddModule(module);
 
             // Update the respective module lists
             if (i == 1) {
@@ -65,10 +52,12 @@ public class Student {
         String Grade = AVGGrade(AverageMarks);
         Main.AverageGrade[index] = Grade;
         System.out.println();
+        System.out.println("Student ID: " + getId());
+        System.out.println("Student Name: " + getName());
         System.out.println("Grade : " + Grade);
-        System.out.println();
     }
 
+    //Method for get the Average Grade
     private String AVGGrade(double AverageMarks) {
         String Grade;
         if (AverageMarks >= 80) {
@@ -81,8 +70,5 @@ public class Student {
             Grade = "Fail";
         }
         return Grade;
-
-
     }
-
 }
