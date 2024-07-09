@@ -5,17 +5,17 @@ import java.util.Scanner;
 public class Main {
 
     private static final int Max_Seats = 100; //variable for max seat capacity
-    static final String[] Students = new String[Max_Seats]; //Array list for hold Student IDs
-    static final String[] StudentName = new String[Max_Seats]; //Array list for hold Student Names
+    static final String[] Students = new String[Max_Seats]; //Array for hold Student IDs
+    static final String[] StudentName = new String[Max_Seats]; //Array for hold Student Names
     static int RegCount = 0; //register counter
     private static final String StudentsReport = "Student_Report.txt"; //File for hold Name, ID, mark1, mark2, mark3,Average,grade
     private static final String StudentSummary = "Student_Summary.txt"; //File for hold Name, ID, mark1, mark2, mark3,Average,grade with detailed view for report
-    static final int[] Module_1 = new int[Max_Seats]; //Array list for hold Module 1 marks
-    static final int[] Module_2 = new int[Max_Seats]; //Array list for hold Module 2 marks
-    static final int[] Module_3 = new int[Max_Seats]; //Array list for hold Module 3 marks
-    static final double[] Average = new double[Max_Seats]; //Array list for hold Module marks Average
-    static final String[] AverageGrade = new String[Max_Seats]; //Array list for hold Modules Grade
-    static final int[] TotalMarks = new int[Max_Seats]; //Array list for hold Module Total marks
+    static final int[] Module_1 = new int[Max_Seats]; //Array for hold Module 1 marks
+    static final int[] Module_2 = new int[Max_Seats]; //Array for hold Module 2 marks
+    static final int[] Module_3 = new int[Max_Seats]; //Array for hold Module 3 marks
+    static final double[] Average = new double[Max_Seats]; //Array for hold Module marks Average
+    static final String[] AverageGrade = new String[Max_Seats]; //Array for hold Modules Grade
+    static final int[] TotalMarks = new int[Max_Seats]; //Array for hold Module Total marks
 
     public static void main(String[] args) {
         //Displays main menu and get the user choices
@@ -84,7 +84,7 @@ public class Main {
         }
     }
 
-    //mEthod for hold the menu items
+    //Method for hold the menu items
     static void Menu() {
         System.out.println("1. Check available seats");
         System.out.println("2. Register student (with ID)");
@@ -316,7 +316,7 @@ public class Main {
             System.out.println();
             System.out.println("Student Data Loaded Successfully.");
         } catch (FileNotFoundException e) {
-            System.out.println("File not Found!!");
+            System.out.println("File not Found!!!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -392,7 +392,6 @@ public class Main {
                     exitMenu = true;
                     System.out.println("Exiting to the main menu..");
                     System.out.println();
-                    System.out.println();
                     break;
 
                 default:
@@ -401,7 +400,7 @@ public class Main {
         }
     }
 
-    //Same as register Student
+    //Method for Add name Same as register Student
     static void AddName() {
         System.out.println();
         Scanner Details = new Scanner(System.in);
@@ -502,7 +501,7 @@ public class Main {
                 System.out.println(line);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File not Found");
+            System.out.println("File not Found!!!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
